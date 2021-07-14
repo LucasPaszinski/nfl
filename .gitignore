@@ -3,7 +3,7 @@
 
 /.elixir_ls/
 
-/.iex.exs/
+.iex.exs
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
