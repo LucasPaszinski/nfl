@@ -1,0 +1,48 @@
+<table>
+  <thead>
+    <tr>
+      <th>
+        Player Name
+        <input type="text" phx-keydown="player_filter" phx-debounce="1000" value="<%= @filter_value %>"/>
+      </th>
+      <th>Team</th>
+      <th>Position</th>
+      <th>Rushing Attempts Per Game Average</th>
+      <th>Rushing Attempts</th>
+      <th><%= live_patch "Total Rushing Yards",
+              to: Routes.rushes_path(@socket, :index,%{sort_by: "total_rushing_yards", filter_by: "player_name", filter_value: @filter_value}) %></th>
+      <th>Rushing Average Yards Per Attempt</th>
+      <th>Rushing Yards Per Game</th>
+      <th><%= live_patch "Total Rushing Touchdowns",
+              to: Routes.rushes_path(@socket, :index,%{sort_by: "total_rushing_touchdowns", filter_by: "player_name", filter_value: @filter_value}) %></th>
+      <th><%= live_patch "Longest Rush",
+              to: Routes.rushes_path(@socket, :index,%{sort_by: "longest_rush", filter_by: "player_name", filter_value: @filter_value}) %></th>
+      <th>Rushing First Downs</th>
+      <th>Rushing First Down Percentage</th>
+      <th>Rushing 20+ Yards Each</th>
+      <th>Rushing 40+ Yards Each</th>
+      <th>Rushing Fumbles</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for rush <- @rushes do %>
+      <tr>
+        <th><%= rush.player.name %></th>
+        <th><%= rush.player.team.name %></th>
+        <th><%= rush.player.position %></th>
+        <th><%= rush.rushing_attemps_per_game_average %></th>
+        <th><%= rush.rushing_attemps %></th>
+        <th><%= rush.total_rushing_yards %></th>
+        <th><%= rush.rushing_average_yards_per_attempt %></th>
+        <th><%= rush.rushing_yards_per_game %></th>
+        <th><%= rush.total_rushing_touchdowns  %></th>
+        <th><%= rush.longest_rush %> <%= rush.is_touchdown %></th>
+        <th><%= rush.rushing_first_downs %></th>
+        <th><%= rush.rushing_first_downs_per_cent %></th>
+        <th><%= rush.rushing_20_plus_yards_each %></th>
+        <th><%= rush.rushing_40_plus_yards_each %></th>
+        <th><%= rush.rushing_fumbles %></th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

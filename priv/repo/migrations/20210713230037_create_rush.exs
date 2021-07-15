@@ -6,7 +6,6 @@ defmodule Nfl.Repo.Migrations.CreateRush do
       # References Player Info
       add :player_id, references(:players)
 
-
       # Att/G (Rushing Attempts Per Game Average)
       add :rushing_attemps_per_game_average, :decimal
       # Att (Rushing Attempts)

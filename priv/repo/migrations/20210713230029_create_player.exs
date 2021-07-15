@@ -6,7 +6,6 @@ defmodule Nfl.Repo.Migrations.CreatePlayer do
       # Team (Player's team abbreviation)
       add :team_id, references(:teams)
 
-
       # Player (Player's name)
       add :name, :string
       # Pos (Player's postion)
