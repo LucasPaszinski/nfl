@@ -15,13 +15,17 @@ defmodule Nfl.Cache do
 
   def start_link(opts) do
     opts = Keyword.put_new(opts, :name, __MODULE__)
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+    GenServer.start_link(__MODULE__, opts, name: table_name(opts))
   end
 
   defp new_table(name) do
     name
     |> table_name()
     |> :ets.new([:set, :named_table, :public, read_concurrency: true, write_concurrency: true])
+  end
+
+  defp table_name(name: name) do
+    :"#{name}.Cache"
   end
 
   defp table_name(name) do

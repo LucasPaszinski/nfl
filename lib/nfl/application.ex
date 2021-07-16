@@ -17,7 +17,8 @@ defmodule Nfl.Application do
       NflWeb.Endpoint,
       # Start a worker by calling: Nfl.Worker.start_link(arg)
       # {Nfl.Worker, arg}
-      {Nfl.Cache, name: Nfl.CSV}
+      Supervisor.child_spec({Nfl.Cache, name: Nfl.CSV}, id: Nfl.CSV),
+      Supervisor.child_spec({Nfl.Cache, name: Nfl.Rushes.Index}, id: Nfl.Rushes.Index)
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

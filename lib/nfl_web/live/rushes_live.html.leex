@@ -1,22 +1,16 @@
-<table>
+<table  class="rushes-table">
   <thead>
     <tr>
-      <th>
-        Player Name
-        <input type="text" phx-keydown="player_filter" phx-debounce="1000" value="<%= @filter_value %>"/>
-      </th>
+      <th>Player Name</th>
       <th>Team</th>
       <th>Position</th>
       <th>Rushing Attempts Per Game Average</th>
       <th>Rushing Attempts</th>
-      <th><%= live_patch "Total Rushing Yards",
-              to: Routes.rushes_path(@socket, :index,%{sort_by: "total_rushing_yards", filter_by: "player_name", filter_value: @filter_value}) %></th>
+      <th>Total Rushing Yards</th>
       <th>Rushing Average Yards Per Attempt</th>
       <th>Rushing Yards Per Game</th>
-      <th><%= live_patch "Total Rushing Touchdowns",
-              to: Routes.rushes_path(@socket, :index,%{sort_by: "total_rushing_touchdowns", filter_by: "player_name", filter_value: @filter_value}) %></th>
-      <th><%= live_patch "Longest Rush",
-              to: Routes.rushes_path(@socket, :index,%{sort_by: "longest_rush", filter_by: "player_name", filter_value: @filter_value}) %></th>
+      <th>Total Rushing Touchdowns</th>
+      <th>Longest Rush</th>
       <th>Rushing First Downs</th>
       <th>Rushing First Down Percentage</th>
       <th>Rushing 20+ Yards Each</th>
@@ -25,6 +19,31 @@
     </tr>
   </thead>
   <tbody>
+  <tr>
+      <th>
+        <input type="text" phx-keydown="player_filter" phx-debounce="1000" value="<%= @filter_value %>"/>
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>
+        <%= live_component Sorter, sort_by: @sort_by, row_sort: "total_rushing_yards", filter_value: @filter_value , order_by: @order_by%>
+      </th>
+      <th></th>
+      <th></th>
+      <th>
+      <%= live_component Sorter, sort_by: @sort_by, row_sort: "total_rushing_touchdowns", filter_value: @filter_value , order_by: @order_by%>
+      </th>
+      <th>
+      <%= live_component Sorter, sort_by: @sort_by, row_sort: "longest_rush", filter_value: @filter_value , order_by: @order_by%>
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
     <%= for rush <- @rushes do %>
       <tr>
         <th><%= rush.player.name %></th>
@@ -36,7 +55,7 @@
         <th><%= rush.rushing_average_yards_per_attempt %></th>
         <th><%= rush.rushing_yards_per_game %></th>
         <th><%= rush.total_rushing_touchdowns  %></th>
-        <th><%= rush.longest_rush %> <%= if rush.is_touchdown, do: "Touchdown", else: ""%></th>
+        <th><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></th>
         <th><%= rush.rushing_first_downs %></th>
         <th><%= rush.rushing_first_downs_per_cent %></th>
         <th><%= rush.rushing_20_plus_yards_each %></th>

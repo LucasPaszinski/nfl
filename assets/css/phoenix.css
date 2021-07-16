@@ -19,7 +19,6 @@ pre{padding: 1em;}
 
 .container{
   margin: 0 auto;
-  max-width: 80.0rem;
   padding: 0 2.0rem;
   position: relative;
   width: 100%
@@ -98,4 +97,62 @@ header nav a {
     flex-basis: 527px;
     margin: 2rem 1rem;
   }
+}
+
+.rushes-table {
+  table-layout:fixed;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.rushes-table th,
+.rushes-table td {
+  padding: 12px 15px;
+  word-wrap: break-word;
+}
+
+.rushes-table thead tr {
+background-color: #009879;
+color: #ffffff;
+text-align: left;
+}
+
+.rushes-table thead tr {
+background-color: #009879;
+color: #ffffff;
+text-align: left;
+}
+
+.rushes-table thead tr::after {
+border-bottom: 1px solid #dddddd;
+}
+
+.rushes-table tbody tr:nth-of-type(even) {
+background-color: #f3f3f3;
+}
+
+.rushes-table tbody tr:last-of-type {
+border-bottom: 2px solid #009879;
+}
+
+.rushes-table tbody tr.active-row {
+font-weight: bold;
+color: #009879;
+}
+
+.triangle-down {
+width: 0;
+height: 0;
+border: solid 5px;
+border-color: transparent transparent black transparent;
+}
+
+.triangle-up {
+width: 0;
+height: 0;
+border: solid 5px;
+border-color: black transparent transparent transparent;
 }
