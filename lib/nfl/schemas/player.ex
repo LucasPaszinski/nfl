@@ -10,7 +10,7 @@ defmodule Nfl.Schemas.Player do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  @required_fields [:name, :team_id]
+  @required_fields [:name, :position, :team_id]
 
   @type t :: %__MODULE__{
           team: Team.t() | Ecto.Association.NotLoaded.t(),
