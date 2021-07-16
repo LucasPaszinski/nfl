@@ -14,9 +14,10 @@ defmodule Nfl.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Nfl.PubSub},
       # Start the Endpoint (http/https)
-      NflWeb.Endpoint
+      NflWeb.Endpoint,
       # Start a worker by calling: Nfl.Worker.start_link(arg)
       # {Nfl.Worker, arg}
+      {Nfl.Cache, name: Nfl.CSV}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

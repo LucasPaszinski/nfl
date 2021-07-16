@@ -36,7 +36,7 @@
         <th><%= rush.rushing_average_yards_per_attempt %></th>
         <th><%= rush.rushing_yards_per_game %></th>
         <th><%= rush.total_rushing_touchdowns  %></th>
-        <th><%= rush.longest_rush %> <%= rush.is_touchdown %></th>
+        <th><%= rush.longest_rush %> <%= if rush.is_touchdown, do: "Touchdown", else: ""%></th>
         <th><%= rush.rushing_first_downs %></th>
         <th><%= rush.rushing_first_downs_per_cent %></th>
         <th><%= rush.rushing_20_plus_yards_each %></th>
@@ -46,3 +46,6 @@
     <% end %>
   </tbody>
 </table>
+<button phx-click="download">
+  Download table as csv
+</button>

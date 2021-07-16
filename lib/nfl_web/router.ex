@@ -17,13 +17,14 @@ defmodule NflWeb.Router do
   scope "/", NflWeb do
     pipe_through :browser
 
-    live "/", RushesLive, :index
+    live "/rush", RushesLive, :index
+    get "/download", DownloadCsvController, :download
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", NflWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", NflWeb do
+    pipe_through :api
+
+  end
 
   # Enables LiveDashboard only for development
   #

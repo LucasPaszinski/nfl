@@ -11,6 +11,19 @@ defmodule NflWeb.RushesLive do
     {:ok, socket}
   end
 
+  def handle_event("download", attrs, socket) do
+    rushes =
+      socket.assigns.rushes
+      |> Nfl.CSV.save_as_csv_content(socket.id)
+
+    socket =
+      redirect(socket,
+        to: Routes.download_csv_path(socket, :download, %{"recover_key" => socket.id})
+      )
+
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_event("player_filter", %{"value" => value} = attrs, socket) do
     socket =

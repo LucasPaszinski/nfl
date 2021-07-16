@@ -10,7 +10,6 @@ defmodule Nfl.Rushes.Index do
     |> preload([r], player: :team)
     |> sort_by(sorters)
     |> filter_by(filters)
-    |> IO.inspect()
     |> Repo.all()
   end
 
