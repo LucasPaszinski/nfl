@@ -4,55 +4,35 @@ defmodule Nfl.Rushes.Index do
   alias Nfl.Cache
   import Ecto.Query
 
-  def rushes(sorters \\ [], filters \\ []) do
+  def rushes_query(sorters \\ [], filters \\ []) do
     from(r in Rush)
     |> join(:inner, [r], p in assoc(r, :player), as: :player)
     |> join(:inner, [player: p], t in assoc(p, :team))
     |> preload([r], player: :team)
     |> sort(sorters)
+    |> order_by([player: p], asc: p.name)
     |> filter(filters)
   end
 
   def rushes_all(sorters \\ [], filters \\ []) do
     sorters
-    |> rushes(filters)
-    |> repo_all_cache()
+    |> rushes_query(filters)
+    |> Repo.all()
   end
 
-  def paginated_rushes(paginate_params \\ [], sorters \\ [], filters \\ []) do
-    IO.inspect(paginate_params: paginate_params, sorters: sorters, filters: filters)
-
+  def paginated_rushes(paginate \\ [], sorters \\ [], filters \\ []) do
     sorters
-    |> rushes(filters)
-    |> IO.inspect()
-    |> Repo.paginate(paginate_params)
-  end
-
-  def repo_all_cache(query, paginate_params \\ []) do
-    key = query_hash(query)
-
-    case Cache.read(__MODULE__, key) do
-      {:ok, value} ->
-        value
-
-      {:error, _} ->
-        value = Repo.paginate(query, paginate_params)
-        IO.puts("Loaded from cache")
-        Cache.write(__MODULE__, key, value)
-    end
-  end
-
-  defp query_hash(query) do
-    :crypto.hash(:md5, "#{inspect(query)}") |> Base.encode16()
+    |> rushes_query(filters)
+    |> Repo.paginate(paginate)
   end
 
   @sorteble ~w(longest_rush total_rushing_touchdowns total_rushing_yards)
   @orderble ~w(desc asc)
 
   defp sort(query, [{ord, sort} | rest]) do
-    case {sort, ord} |> IO.inspect() do
+    case {sort, ord} do
       {sort, ord} when sort in @sorteble and ord in @orderble ->
-        sort = [{String.to_atom(ord), String.to_atom(sort)}] |> IO.inspect()
+        sort = [{String.to_atom(ord), String.to_atom(sort)}]
 
         query
         |> order_by([r], ^sort)
@@ -63,7 +43,7 @@ defmodule Nfl.Rushes.Index do
     end
   end
 
-  defp sort(query, _) do
+  defp sort(query, []) do
     query
   end
 

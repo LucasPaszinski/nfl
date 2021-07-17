@@ -1,47 +1,46 @@
 defmodule NflWeb.Live.Components.Pagination do
   use NflWeb, :live_component
 
+  def pages_sizes do
+    ~w(10 25 50 100 500 1000)
+  end
+
   def render(assigns) do
     ~L"""
     <nav>
      <ul class="pagination horizontal">
        <li>
-         <a class="<%= if @page_number <= 1, do: "active" %>" href="#" phx-click="nav" phx-value-page="<%= @page_number - 1 %>">Previous</a>
+         <a
+            href="#"
+            phx-click="nav"
+            phx-value-page="<%= if @page > 1 , do: @page - 1, else: @page %>"
+          >
+            <
+          </a>
        </li>
-    <%= for idx <-  Enum.to_list(1..@total_pages) do %>
+    <%= for idx <- 1..@total_pages do %>
        <li>
-       <a class="<%= if @page_number == idx, do: "active" %>" href="#" phx-click="nav" phx-value-page="<%= idx %>"><%= idx %></a>
+        <a
+          href="#"
+          phx-click="nav"
+          phx-value-page="<%= idx %>"
+          class="<%= if @page == idx, do: "active" %>"
+        >
+          <%= idx %>
+        </a>
        </li>
     <% end %>
        <li>
-         <a class="<%= if @page_number >= @total_pages, do: "active" %>" href="#" phx-click="nav" phx-value-page="<%= @page_number + 1 %>">Next</a>
+         <a
+         href="#"
+         phx-click="nav"
+         phx-value-page="<%= if @page < @total_pages , do: @page - 1, else: @page %>"
+         >
+          >
+        </a>
        </li>
      </ul>
      </nav>
-
-     <nav>
-     <ul class="pagination horizontal">
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="10">10</a>
-       </li>
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="25">25</a>
-       </li>
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="50">50</a>
-       </li>
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="100">100</a>
-       </li>
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="500">500</a>
-       </li>
-       <li>
-         <a class="<%= if @page_size <= 1, do: "active" %>" href="#" phx-click="page-size" phx-value-page-size="1000">1000</a>
-       </li>
-     </ul>
-     </nav>
-
     """
   end
 end

@@ -20,58 +20,62 @@
   </thead>
   <tbody>
     <tr>
-      <th>
+      <td colspan=2>
         <input type="text" placeholder="Filter by Player" phx-keydown="player" phx-debounce="1000" value="<%= @player %>"/>
-      </th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th>
-        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_yards"%>
-      </th>
-      <th></th>
-      <th></th>
-      <th>
-        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_touchdowns" %>
-      </th>
-      <th>
-        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "longest_rush" %>
-      </th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <%= live_component Sorter, wrapper: "td", page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_yards"%>
+      <td></td>
+      <td></td>
+      <%= live_component Sorter,wrapper: "td", page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_touchdowns" %>
+      <%= live_component Sorter, wrapper: "td", page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "longest_rush" %>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
       </tr>
-      <%= for rush <- @rushes do %>
+      <%= for rush <- @entries do %>
         <tr>
-          <th><%= rush.player.name %></th>
-          <th><%= rush.player.team.name %></th>
-          <th><%= rush.player.position %></th>
-          <th><%= rush.rushing_attemps_per_game_average %></th>
-          <th><%= rush.rushing_attemps %></th>
-          <th><%= rush.total_rushing_yards %></th>
-          <th><%= rush.rushing_average_yards_per_attempt %></th>
-          <th><%= rush.rushing_yards_per_game %></th>
-          <th><%= rush.total_rushing_touchdowns  %></th>
-          <th><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></th>
-          <th><%= rush.rushing_first_downs %></th>
-          <th><%= rush.rushing_first_downs_per_cent %></th>
-          <th><%= rush.rushing_20_plus_yards_each %></th>
-          <th><%= rush.rushing_40_plus_yards_each %></th>
-          <th><%= rush.rushing_fumbles %></th>
+          <th><%= rush.player.name %></td>
+          <td><%= rush.player.team.name %></td>
+          <td><%= rush.player.position %></td>
+          <td><%= rush.rushing_attemps_per_game_average %></td>
+          <td><%= rush.rushing_attemps %></td>
+          <td><%= rush.total_rushing_yards %></td>
+          <td><%= rush.rushing_average_yards_per_attempt %></td>
+          <td><%= rush.rushing_yards_per_game %></td>
+          <td><%= rush.total_rushing_touchdowns  %></td>
+          <td><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></td>
+          <td><%= rush.rushing_first_downs %></td>
+          <td><%= rush.rushing_first_downs_per_cent %></td>
+          <td><%= rush.rushing_20_plus_yards_each %></td>
+          <td><%= rush.rushing_40_plus_yards_each %></td>
+          <td><%= rush.rushing_fumbles %></td>
         </tr>
       <% end %>
     </tbody>
     <tfoot>
       <tr>
-        <th colspan=14>
-          <%= live_component Pagination, page_size: @page_size, page_number: @page, total_pages: @total_pages %>
+        <th colspan=5>
+          <%= live_component PageSize, page_size: @page_size %>
         </th>
-        <tr>
-        </tfoot>
-      </table>
-      <button phx-click="download">
-        Download table as csv
-      </button></th>
+        <th colspan=5>
+
+        </th>
+        <th colspan=5>
+            <button class="download-btn" phx-click="download">
+            <span>Download as csv</span>
+            <img class="download-icon" src="<%= Routes.static_path(@socket, "/images/download.svg") %>" />
+          </button>
+        </th>
+      <tr>
+      <tr>
+       <th colspan=15>
+      <%= live_component Pagination, page: @page, total_pages: @total_pages %>
+        </th>
+      </tr>
+    </tfoot>
+</table>

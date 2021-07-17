@@ -1,0 +1,116 @@
+@import url('https://css.gg/sort-az.css');
+@import url('https://css.gg/sort-za.css');
+@import url('https://css.gg/arrows-exchange-v.css');
+
+.rushes-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.rushes-table th, .rushes-table td {
+    padding: 12px 15px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    word-wrap: break-word;
+}
+
+.rushes-table thead tr {
+    background-color: #282C34;
+    color: #ffffff;
+    text-align: center;
+}
+
+.rushes-table thead tr::after {
+    border-bottom: 1px solid #dddddd;
+}
+
+.rushes-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.rushes-table tbody tr:last-of-type {
+    border-bottom: 2px solid #282C34;
+}
+
+.rushes-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.rushes-table tfoot tr {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rushes-table tfoot tr th {
+    justify-content: center;
+    align-items: center;
+}
+
+button.download-btn {
+    display: inline
+}
+
+button.download-btn span {
+    margin-right: 0.8rem;
+}
+
+button.download-btn img.download-icon {
+    filter: invert(91%) sepia(0%) saturate(494%) hue-rotate(161deg) brightness(95%) contrast(100%);
+    width: 1.5em;
+    height: 1.5em;
+    flex: 0 0
+}
+
+.sorter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sorter:hover {
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+nav {
+    box-sizing: inherit;
+}
+
+.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination li {
+    display: inline;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.pagination a.active {
+    border-radius: 5px;
+    background-color: #282C34;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
