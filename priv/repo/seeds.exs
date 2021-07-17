@@ -80,7 +80,6 @@ Repo.transaction(fn ->
   |> Path.join("priv/files/rushing.json")
   |> File.read!()
   |> Jason.decode!()
-  |> IO.inspect()
   |> Enum.group_by(& &1["Team"])
   |> Map.to_list()
   |> Enum.map(fn {team_name, infos} ->

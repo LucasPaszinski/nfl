@@ -1,18 +1,9 @@
 defmodule Nfl.CSV do
-  alias Nfl.Cache
-
-  def save_as_csv_content(rushes, recover_key) do
-    csv_content =
+  def generate_csv_content(rushes) do
       rushes
       |> parse_content()
       |> CSV.encode()
       |> Enum.join("")
-
-    Cache.write(__MODULE__, recover_key, csv_content)
-  end
-
-  def read_csv(recover_key) do
-    Cache.read(__MODULE__, recover_key)
   end
 
   @headers [

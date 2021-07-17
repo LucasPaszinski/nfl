@@ -9,12 +9,26 @@ defmodule Nfl.Rushes.Index do
     |> join(:inner, [r], p in assoc(r, :player), as: :player)
     |> join(:inner, [player: p], t in assoc(p, :team))
     |> preload([r], player: :team)
-    |> sort_by(sorters)
-    |> filter_by(filters)
+    |> sort(sorters)
+    |> filter(filters)
+  end
+
+  def rushes_all(sorters \\ [], filters \\ []) do
+    sorters
+    |> rushes(filters)
     |> repo_all_cache()
   end
 
-  def repo_all_cache(query) do
+  def paginated_rushes(paginate_params \\ [], sorters \\ [], filters \\ []) do
+    IO.inspect(paginate_params: paginate_params, sorters: sorters, filters: filters)
+
+    sorters
+    |> rushes(filters)
+    |> IO.inspect()
+    |> Repo.paginate(paginate_params)
+  end
+
+  def repo_all_cache(query, paginate_params \\ []) do
     key = query_hash(query)
 
     case Cache.read(__MODULE__, key) do
@@ -22,7 +36,7 @@ defmodule Nfl.Rushes.Index do
         value
 
       {:error, _} ->
-        value = Repo.all(query)
+        value = Repo.paginate(query, paginate_params)
         IO.puts("Loaded from cache")
         Cache.write(__MODULE__, key, value)
     end
@@ -32,51 +46,48 @@ defmodule Nfl.Rushes.Index do
     :crypto.hash(:md5, "#{inspect(query)}") |> Base.encode16()
   end
 
-  @sorteble_by ~w(longest_rush total_rushing_touchdowns total_rushing_yards)
-  @orderble_by ~w(desc asc)
+  @sorteble ~w(longest_rush total_rushing_touchdowns total_rushing_yards)
+  @orderble ~w(desc asc)
 
-  defp sort_by(query, [%{"sort_by" => sort_by, "order_by" => order_by} | rest]) do
-    case {sort_by, order_by} do
-      {sort_by, order_by} when sort_by in @sorteble_by and order_by in @orderble_by ->
-        sort_by = [{String.to_atom(order_by), String.to_atom(sort_by)}]
+  defp sort(query, [{ord, sort} | rest]) do
+    case {sort, ord} |> IO.inspect() do
+      {sort, ord} when sort in @sorteble and ord in @orderble ->
+        sort = [{String.to_atom(ord), String.to_atom(sort)}] |> IO.inspect()
 
         query
-        |> order_by([r], ^sort_by)
-        |> sort_by(rest)
+        |> order_by([r], ^sort)
+        |> sort(rest)
 
       _otherwise ->
         query
     end
   end
 
-  defp sort_by(query, _) do
+  defp sort(query, _) do
     query
   end
 
-  @filterble_by ~w(player_name)
+  @filterble ~w(player)a
 
-  defp filter_by(query, [%{"filter_by" => filter_by, "filter_value" => value} | rest]) do
-    case filter_by do
-      filter_by when filter_by in @filterble_by ->
-        filter_by = String.to_atom(filter_by)
-
+  defp filter(query, [{filter, value} | rest]) do
+    case filter do
+      filter when filter in @filterble ->
         query
-        |> apply_filter(filter_by, value)
-        |> filter_by(rest)
+        |> apply_filter(filter, value)
+        |> filter(rest)
 
       _otherwise ->
         query
     end
   end
 
-  defp filter_by(query, _) do
+  defp filter(query, _) do
     query
   end
 
-  defp apply_filter(query, :player_name, ""), do: query
+  defp apply_filter(query, :player, ""), do: query
 
-  defp apply_filter(query, :player_name, value) do
-    query
-    |> where([player: p], ilike(p.name, ^"%#{value}%"))
+  defp apply_filter(query, :player, value) do
+    where(query, [player: p], ilike(p.name, ^"%#{value}%"))
   end
 end

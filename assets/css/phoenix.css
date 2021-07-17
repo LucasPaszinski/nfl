@@ -156,3 +156,44 @@ height: 0;
 border: solid 5px;
 border-color: black transparent transparent transparent;
 }
+
+.square {
+  width: 0;
+  height: 0;
+  border: solid 5px;
+  border-color: black black black black;
+  }
+
+nav {
+  box-sizing: inherit;
+}
+
+.pagination  {
+	display: inline-block;
+	padding: 0;
+	margin: 8px 0;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination li {
+	display: inline;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.pagination a.active {
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}

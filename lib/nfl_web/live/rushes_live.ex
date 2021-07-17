@@ -1,94 +1,144 @@
 defmodule NflWeb.RushesLive do
   use NflWeb, :live_view
 
-  alias NflWeb.Live.Components.{TouchdownIcon, Sorter}
+  alias NflWeb.Live.Components.{TouchdownIcon, Sorter, Pagination}
+
+  @query_keys ~w(ord sort page player page_size)a
 
   @impl true
   def mount(params, _session, socket) do
     socket =
       socket
-      |> update_filter_and_sort(params)
-      |> update_rushes()
+      |> from_query_to_socket(params)
+      |> load_rushes()
 
     {:ok, socket}
   end
 
-  def handle_event("download", _, socket) do
-    rushes =
-      socket.assigns.rushes
-      |> Nfl.CSV.save_as_csv_content(socket.id)
-
-    socket =
-      redirect(socket,
-        to: Routes.download_csv_path(socket, :download, %{"recover_key" => socket.id})
-      )
-
-    {:noreply, socket}
-  end
-
   @impl true
-  def handle_event("player_filter", %{"value" => value} = attrs, socket) do
-    socket =
-      socket
-      |> assign(filter_by: "player_name", filter_value: value)
-      |> Phoenix.LiveView.push_patch(
-        to:
-          Routes.rushes_path(socket, :index, %{
-            filter_by: "player_name",
-            filter_value: value,
-            sort_by: socket.assigns.sort_by,
-            order_by: socket.assigns.order_by
-          })
-      )
-      |> update_rushes()
-
-    {:noreply, socket}
-  end
-
   def handle_params(
         params,
         _uri,
         socket
       ) do
-
     socket =
       socket
-      |> update_filter_and_sort(params)
-      |> update_rushes()
+      |> from_query_to_socket(params)
+      |> load_rushes()
 
     {:noreply, socket}
   end
 
-  defp update_rushes(socket) do
-    filters = [
-      %{
-        "filter_by" => socket.assigns.filter_by,
-        "filter_value" => socket.assigns.filter_value
-      }
-    ]
+  @impl true
+  def handle_event("sort", %{"sort" => sort, "ord" => ord}, socket) do
+    socket =
+      socket
+      |> assign(sort: sort)
+      |> assign(ord: ord)
+      |> from_socket_to_query()
 
-    sorts = [
-      %{"sort_by" => socket.assigns.sort_by, "order_by" => socket.assigns.order_by}
-    ]
-
-    {time, rushes} = :timer.tc(fn -> Nfl.Rushes.Index.rushes(sorts, filters) end)
-
-    IO.puts("Loading took #{time}")
-
-    rushes = assign(socket, rushes: rushes)
+    {:noreply, socket}
   end
 
-  defp update_filter_and_sort(socket, params) do
-    filter_value = Map.get(params, "filter_value", "")
-    filter_by = Map.get(params, "filter_by", "")
-    sort_by = Map.get(params, "sort_by", "")
-    order_by = Map.get(params, "order_by", "")
+  @impl true
+  def handle_event("page-size", %{"page-size" => page_size}, socket) do
+    socket =
+      socket
+      |> assign(page_size: page_size)
+      |> from_socket_to_query()
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("download", _, socket) do
+    params = create_query_params(socket)
+    socket = redirect(socket, to: Routes.download_csv_path(socket, :download, params))
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("player", %{"value" => player}, socket) do
+    socket =
+      socket
+      |> assign(player: player)
+      |> assign(page: 1)
+      |> from_socket_to_query()
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("nav", %{"page" => page} = attrs, socket) do
+    socket =
+      socket
+      |> assign(page: page)
+      |> from_socket_to_query()
+
+    {:noreply, socket}
+  end
+
+  defp from_socket_to_query(socket) do
+    query_params = create_query_params(socket)
+
+    push_patch(socket, to: Routes.rushes_path(socket, :index, query_params))
+  end
+
+  defp create_query_params(socket) do
+    update_if_exists_in_socket = &update_if_exists(&1, socket.assigns, &2)
+
+    Enum.reduce(@query_keys, %{}, fn key, acc ->
+      update_if_exists_in_socket.(acc, key) |> IO.inspect(label: :query_mid)
+    end)
+    |> IO.inspect(label: :query_params)
+  end
+
+  defp update_if_exists(map, assigns, key) do
+    case Map.get(assigns, key) do
+      "" -> map
+      nil -> map
+      value -> Map.put(map, key, value)
+    end
+  end
+
+  defp load_rushes(socket = %{assigns: assigns}) do
+    pages = [page: Map.get(assigns, :page, "1"), page_size: Map.get(assigns, :page_size, "10")]
+    filters = [player: Map.get(assigns, :player, "")]
+    sorts = [{Map.get(assigns, :ord, ""), Map.get(assigns, :sort, "")}]
+
+    %{
+      entries: entries,
+      page_number: page,
+      page_size: page_size,
+      total_entries: total_entries,
+      total_pages: total_pages
+    } = Nfl.Rushes.Index.paginated_rushes(pages, sorts, filters)
 
     assign(socket,
-      filter_value: filter_value,
-      sort_by: sort_by,
-      order_by: order_by,
-      filter_by: filter_by
+      rushes: entries,
+      page: page,
+      page_size: page_size,
+      total_entries: total_entries,
+      total_pages: total_pages
     )
+  end
+
+  defp from_query_to_socket(socket, query) do
+    get_query_value = &get_from_query_or_socket(query, Atom.to_string(&1), socket, &1)
+
+    assign(socket, Enum.map(@query_keys, &{&1, get_query_value.(&1)}))
+  end
+
+  defp get_from_query_or_socket(
+         query,
+         query_key,
+         _socket = %{assigns: assigns},
+         assign_key
+       ) do
+    query_value = Map.get(query, query_key)
+    assigns_value = Map.get(assigns, assign_key)
+
+    query_value || assigns_value
   end
 end

@@ -19,52 +19,59 @@
     </tr>
   </thead>
   <tbody>
-  <tr>
+    <tr>
       <th>
-        <input type="text" phx-keydown="player_filter" phx-debounce="1000" value="<%= @filter_value %>"/>
+        <input type="text" placeholder="Filter by Player" phx-keydown="player" phx-debounce="1000" value="<%= @player %>"/>
       </th>
       <th></th>
       <th></th>
       <th></th>
       <th></th>
       <th>
-        <%= live_component Sorter, sort_by: @sort_by, row_sort: "total_rushing_yards", filter_value: @filter_value , order_by: @order_by%>
+        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_yards"%>
       </th>
       <th></th>
       <th></th>
       <th>
-      <%= live_component Sorter, sort_by: @sort_by, row_sort: "total_rushing_touchdowns", filter_value: @filter_value , order_by: @order_by%>
+        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "total_rushing_touchdowns" %>
       </th>
       <th>
-      <%= live_component Sorter, sort_by: @sort_by, row_sort: "longest_rush", filter_value: @filter_value , order_by: @order_by%>
+        <%= live_component Sorter, page: @page, player: @player, sort: @sort, ord: @ord, row_sort: "longest_rush" %>
       </th>
       <th></th>
       <th></th>
       <th></th>
       <th></th>
-      <th></th>
-    </tr>
-    <%= for rush <- @rushes do %>
-      <tr>
-        <th><%= rush.player.name %></th>
-        <th><%= rush.player.team.name %></th>
-        <th><%= rush.player.position %></th>
-        <th><%= rush.rushing_attemps_per_game_average %></th>
-        <th><%= rush.rushing_attemps %></th>
-        <th><%= rush.total_rushing_yards %></th>
-        <th><%= rush.rushing_average_yards_per_attempt %></th>
-        <th><%= rush.rushing_yards_per_game %></th>
-        <th><%= rush.total_rushing_touchdowns  %></th>
-        <th><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></th>
-        <th><%= rush.rushing_first_downs %></th>
-        <th><%= rush.rushing_first_downs_per_cent %></th>
-        <th><%= rush.rushing_20_plus_yards_each %></th>
-        <th><%= rush.rushing_40_plus_yards_each %></th>
-        <th><%= rush.rushing_fumbles %></th>
+      <th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-<button phx-click="download">
-  Download table as csv
-</button>
+      <%= for rush <- @rushes do %>
+        <tr>
+          <th><%= rush.player.name %></th>
+          <th><%= rush.player.team.name %></th>
+          <th><%= rush.player.position %></th>
+          <th><%= rush.rushing_attemps_per_game_average %></th>
+          <th><%= rush.rushing_attemps %></th>
+          <th><%= rush.total_rushing_yards %></th>
+          <th><%= rush.rushing_average_yards_per_attempt %></th>
+          <th><%= rush.rushing_yards_per_game %></th>
+          <th><%= rush.total_rushing_touchdowns  %></th>
+          <th><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></th>
+          <th><%= rush.rushing_first_downs %></th>
+          <th><%= rush.rushing_first_downs_per_cent %></th>
+          <th><%= rush.rushing_20_plus_yards_each %></th>
+          <th><%= rush.rushing_40_plus_yards_each %></th>
+          <th><%= rush.rushing_fumbles %></th>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan=14>
+          <%= live_component Pagination, page_size: @page_size, page_number: @page, total_pages: @total_pages %>
+        </th>
+        <tr>
+        </tfoot>
+      </table>
+      <button phx-click="download">
+        Download table as csv
+      </button></th>
