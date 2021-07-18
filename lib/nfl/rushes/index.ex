@@ -1,8 +1,9 @@
 defmodule Nfl.Rushes.Index do
+  import Ecto.Query
+
   alias Nfl.Repo
   alias Nfl.Schemas.Rush
   alias Nfl.Cache
-  import Ecto.Query
 
   def rushes_query(sorters \\ [], filters \\ []) do
     from(r in Rush)
@@ -10,8 +11,8 @@ defmodule Nfl.Rushes.Index do
     |> join(:inner, [player: p], t in assoc(p, :team))
     |> preload([r], player: :team)
     |> sort(sorters)
-    |> order_by([player: p], asc: p.name)
     |> filter(filters)
+    |> order_by([player: p], asc: p.name)
   end
 
   def rushes_all(sorters \\ [], filters \\ []) do
@@ -20,7 +21,7 @@ defmodule Nfl.Rushes.Index do
     |> Repo.all()
   end
 
-  def paginated_rushes(paginate \\ [], sorters \\ [], filters \\ []) do
+  def rushes_paginated(paginate \\ [], sorters \\ [], filters \\ []) do
     sorters
     |> rushes_query(filters)
     |> Repo.paginate(paginate)
@@ -29,36 +30,24 @@ defmodule Nfl.Rushes.Index do
   @sorteble ~w(longest_rush total_rushing_touchdowns total_rushing_yards)
   @orderble ~w(desc asc)
 
-  defp sort(query, [{ord, sort} | rest]) do
-    case {sort, ord} do
-      {sort, ord} when sort in @sorteble and ord in @orderble ->
-        sort = [{String.to_atom(ord), String.to_atom(sort)}]
+  defp sort(query, [{ord, sort} | rest]) when sort in @sorteble and ord in @orderble do
+    sort = [{String.to_atom(ord), String.to_atom(sort)}]
 
-        query
-        |> order_by([r], ^sort)
-        |> sort(rest)
-
-      _otherwise ->
-        query
-    end
+    query
+    |> order_by([r], ^sort)
+    |> sort(rest)
   end
 
-  defp sort(query, []) do
+  defp sort(query, _) do
     query
   end
 
   @filterble ~w(player)a
 
-  defp filter(query, [{filter, value} | rest]) do
-    case filter do
-      filter when filter in @filterble ->
-        query
-        |> apply_filter(filter, value)
-        |> filter(rest)
-
-      _otherwise ->
-        query
-    end
+  defp filter(query, [{filter, value} | rest]) when filter in @filterble do
+    query
+    |> apply_filter(filter, value)
+    |> filter(rest)
   end
 
   defp filter(query, _) do

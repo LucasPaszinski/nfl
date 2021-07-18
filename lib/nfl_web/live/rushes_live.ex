@@ -31,6 +31,15 @@ defmodule NflWeb.RushesLive do
   end
 
   @impl true
+  def handle_event("touchdown", _, socket) do
+    socket =
+      socket
+      |> put_flash(:info, "T means the player made a touchdown during longest rush")
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("sort", %{"sort" => sort, "ord" => ord}, socket) do
     socket =
       socket
@@ -139,7 +148,7 @@ defmodule NflWeb.RushesLive do
     sorts = create_sort_params(query_params)
     filters = create_filter_params(query_params)
 
-    rushes_page = Nfl.Rushes.Index.paginated_rushes(pages, sorts, filters)
+    rushes_page = Nfl.Rushes.Index.rushes_paginated(pages, sorts, filters)
 
     assign(socket,
       entries: rushes_page.entries,

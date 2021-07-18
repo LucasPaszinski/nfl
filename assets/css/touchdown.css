@@ -1,0 +1,20 @@
+div.touchdown {
+    direction: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: inline;
+}
+
+div.touchdown span div.touchdown {
+    align-items: center;
+    justify-content: center;
+}
+
+div.touchdown button.touchdown-t {
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    align-items: center;
+    justify-content: center;
+}

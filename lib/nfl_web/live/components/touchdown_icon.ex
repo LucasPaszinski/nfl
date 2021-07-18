@@ -3,11 +3,11 @@ defmodule NflWeb.Live.Components.TouchdownIcon do
 
   def render(assigns) do
     ~L"""
-    <%= if @is_touchdown do %>
-      <span class="dot">
-        T
-      </span>
-     <% end %>
+      <%= if @is_touchdown do %>
+      <button phx-click="touchdown" class="touchdown-button"><%= @longest_rush %> T</button>
+      <% else %>
+      <span><%= @longest_rush %></span>
+      <% end %>
     """
   end
 end
