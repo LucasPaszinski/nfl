@@ -5,38 +5,33 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    
-    # Similar to docker-compose.yml but not the same, 🤷‍♂️
+  run-tests:
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
     services:
       postgres:
-        image: postgres:11.6-alpine
+        image: postgres:12
+        ports: ['5432:5432']
         env:
           POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    
-    name: Build and test
-    runs-on: ubuntu-latest
-
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Elixir
-      uses: actions/setup-elixir@v1
-      with:
-        elixir-version: '1.12.1' # Define the elixir version [required]
-        otp-version: '24.1' # Define the OTP version [required]
-    - name: Restore dependencies cache
-      uses: actions/cache@v2
-      with:
-        path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
-    - name: Install dependencies
-      run: mix deps.get
-    - name: Run tests
-      run: mix test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: '1.12.*'
+          otp-version: '24.*'
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: cd assets && yarn install --frozen-lockfile
+      - run: mix test
+        env:
+          DB_PASSWORD: postgres
+          DB_HOST: postgres
