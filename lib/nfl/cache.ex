@@ -1,8 +1,19 @@
 defmodule Nfl.Cache do
   use GenServer
 
+  @is_test_env if Mix.env() == :test, do: true, else: false
+
+  @spec create_key(String.t()) :: String.t()
+  def create_key(text_id) do
+    :md5
+    |> :crypto.hash(text_id)
+    |> Base.encode16()
+  end
+
   def write(name \\ __MODULE__, key, value) do
-    true = :ets.insert(table_name(name), {key, value})
+    if not @is_test_env do
+      true = :ets.insert(table_name(name), {key, value})
+    end
 
     value
   end
