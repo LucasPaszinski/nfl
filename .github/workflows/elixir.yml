@@ -31,6 +31,8 @@ jobs:
       - run: mix deps.get
       - run: mix deps.compile
       - run: cd assets && yarn install --frozen-lockfile
+      - run: mix ecto.create
+      - run: mix ecto.migrate
       - run: mix test
         env:
           DB_PASSWORD: postgres
