@@ -58,6 +58,18 @@ defmodule NflWeb.DownloadCsvControllerTest do
       assert Regex.match?(pattern, response)
     end
 
+    test "no filter by player name", %{conn: conn, rushes: rushes} do
+      [p1, p2] = rushes
+
+      attrs = %{"player" => p1.player.name}
+      path = Routes.download_csv_path(conn, :download, attrs)
+
+      conn = get(conn, path)
+
+      assert response(conn, 200) =~ p1.player.name
+      refute response(conn, 200) =~ p2.player.name
+    end
+
     for sort <- ~w(longest_rush total_rushing_touchdowns total_rushing_yards)a do
       for ord <- ~w(asc desc)a do
         @tag sort: sort
