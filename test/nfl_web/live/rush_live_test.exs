@@ -85,13 +85,27 @@ defmodule NflWeb.RushLiveTest do
            |> render_click() =~ "T is for when a touchdown happens during the longest rush"
   end
 
+  test "when download is clicked should redirect", %{conn: conn} do
+    insert(:rush)
+
+    {:ok, page_live, disconnected_html} = live(conn, "/")
+
+    assert disconnected_html =~ "Download as csv"
+    assert render(page_live) =~ "Download as csv"
+
+    page_live
+    |> element("button", "Download as csv")
+    |> render_click()
+
+    assert_redirected(page_live, "/download?ord=&page=1&page_size=10&player=&sort=")
+  end
+
   describe "sorting on the table" do
     defp create_text_longest_rush(%{longest_rush: value, is_touchdown: true}),
-      do:
-        "id=\"longest_rush\".*#{value} T<"
+      do: "<td id=\"longest_rush\".*#{value} T"
 
     defp create_text_longest_rush(%{longest_rush: value, is_touchdown: false}),
-      do: "id=\"longest_rush\".*#{value}<"
+      do: "<td id=\"longest_rush\"><span.*>#{value}</span></td>"
 
     defp create_text(sort, rush) do
       value = Map.get(rush, sort)
@@ -169,6 +183,39 @@ defmodule NflWeb.RushLiveTest do
           |> render_click()
 
         assert Regex.match?(ordered_asc_regex, reordered_live_asc)
+      end
+
+      for ord <- ~w(asc desc) do
+        @tag ord: ord
+        @tag sort: sort
+
+        test "when sorting #{sort} and ord #{ord} download should redirect to filter url", %{
+          conn: conn,
+          sort: sort,
+          ord: ord
+        } do
+          insert(:rush)
+
+          {:ok, page_live, _disconnected_html} = live(conn, "/")
+
+          case ord do
+            "asc" ->
+              page_live |> element("td.#{sort}") |> render_click()
+              page_live |> element("td.#{sort}") |> render_click()
+
+            "desc" ->
+              page_live |> element("td.#{sort}") |> render_click()
+          end
+
+          page_live
+          |> element("button", "Download as csv")
+          |> render_click()
+
+          assert_redirected(
+            page_live,
+            "/download?ord=#{ord}&page=1&page_size=10&player=&sort=#{sort}"
+          )
+        end
       end
     end
   end
