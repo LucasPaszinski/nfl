@@ -1,7 +1,7 @@
 <table  class="rushes-table">
   <thead>
     <tr>
-      <th>Player Name</th>
+      <th>Player</th>
       <th>Team</th>
       <th>Position</th>
       <th>Rushing Attempts Per Game Average</th>
@@ -48,7 +48,7 @@
           <td id="rushing_average_yards_per_attempt"><%= rush.rushing_average_yards_per_attempt %></td>
           <td id="rushing_yards_per_game"><%= rush.rushing_yards_per_game %></td>
           <td id="total_rushing_touchdowns"><%= rush.total_rushing_touchdowns  %></td>
-          <td id="longest_rush"><%= live_component TouchdownIcon, longest_rush: rush.longest_rush, is_touchdown: rush.is_touchdown %></td>
+          <td id="longest_rush"><%= live_component TouchdownIcon, id: rush.id, show_info: false, longest_rush: rush.longest_rush, is_touchdown: rush.is_touchdown %></td>
           <td id="rushing_first_downs"><%= rush.rushing_first_downs %></td>
           <td id="rushing_first_downs_per_cent"><%= rush.rushing_first_downs_per_cent %></td>
           <td id="rushing_20_plus_yards_each"><%= rush.rushing_20_plus_yards_each %></td>

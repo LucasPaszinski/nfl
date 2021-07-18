@@ -31,15 +31,6 @@ defmodule NflWeb.RushesLive do
   end
 
   @impl true
-  def handle_event("touchdown", _, socket) do
-    socket =
-      socket
-      |> put_flash(:info, "T means the player made a touchdown during longest rush")
-
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_event("sort", %{"sort" => sort, "ord" => ord}, socket) do
     socket =
       socket
@@ -107,7 +98,7 @@ defmodule NflWeb.RushesLive do
   defp get_from_query_or_socket(
          query,
          query_key,
-         _socket = %{assigns: assigns},
+         %{assigns: assigns} = _socket,
          assign_key
        ) do
     query_value = Map.get(query, query_key)
@@ -116,7 +107,7 @@ defmodule NflWeb.RushesLive do
     query_value || assigns_value
   end
 
-  defp create_query_params(_socket = %{assigns: assigns}, hide_values_from_query? \\ false) do
+  defp create_query_params(%{assigns: assigns} = _socket, hide_values_from_query? \\ false) do
     Enum.reduce(@query_params_and_defaults, %{}, fn {key, default_val}, acc ->
       value = Map.get(assigns, key) || default_val
 
@@ -148,7 +139,10 @@ defmodule NflWeb.RushesLive do
     sorts = create_sort_params(query_params)
     filters = create_filter_params(query_params)
 
-    rushes_page = Nfl.Rushes.Index.rushes_paginated(pages, sorts, filters)
+    {time, rushes_page} =
+      :timer.tc(fn -> Nfl.Rushes.Index.rushes_paginated(pages, sorts, filters) end)
+
+    IO.puts("Took #{time / 1000}ms")
 
     assign(socket,
       entries: rushes_page.entries,

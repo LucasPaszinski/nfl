@@ -65,8 +65,8 @@ defmodule NflWeb.RushLiveTest do
 
       live_page = render(page_live)
 
-      assert disconnected_html =~ ">#{longest_rush_t} T<"
-      assert live_page =~ ">#{longest_rush_t} T<"
+      assert disconnected_html =~ "#{longest_rush_t} T"
+      assert live_page =~ "#{longest_rush_t} T"
       assert disconnected_html =~ ">#{longest_rush}<"
       assert live_page =~ ">#{longest_rush}<"
     end
@@ -81,17 +81,17 @@ defmodule NflWeb.RushLiveTest do
     refute render(page_live) =~ "T means the player made a touchdown during longest rush"
 
     assert page_live
-           |> element("button", "9212 T")
-           |> render_click() =~ "T means the player made a touchdown during longest rush"
+           |> element("div", "9212 T")
+           |> render_click() =~ "T is for when a touchdown happens during the longest rush"
   end
 
   describe "sorting on the table" do
     defp create_text_longest_rush(%{longest_rush: value, is_touchdown: true}),
       do:
-        "<td id=\"longest_rush\"><button phx-click=\"touchdown\" class=\"touchdown-button\">#{value} T<"
+        "id=\"longest_rush\".*#{value} T<"
 
     defp create_text_longest_rush(%{longest_rush: value, is_touchdown: false}),
-      do: "<td id=\"longest_rush\"><span>#{value}</span></td>"
+      do: "id=\"longest_rush\".*#{value}<"
 
     defp create_text(sort, rush) do
       value = Map.get(rush, sort)
