@@ -1,6 +1,7 @@
 defmodule NflWeb.Live.Components.TouchdownIcon do
   use NflWeb, :live_component
 
+  @impl true
   def render(assigns) do
     ~L"""
       <%= if @is_touchdown do %>
@@ -16,13 +17,14 @@ defmodule NflWeb.Live.Components.TouchdownIcon do
     """
   end
 
-  def handle_event("touchdown", %{"show" => show} = a, socket) do
-    IO.inspect(a)
+  @impl true
+  def handle_event("touchdown", %{"show" => show}, socket) do
     switched_show = not to_boolean(show)
 
     {:noreply, assign(socket, show_info: switched_show)}
   end
 
+  @spec to_boolean(boolean() | String.t()) :: boolean()
   defp to_boolean(b) when is_boolean(b), do: b
 
   defp to_boolean(b) when is_binary(b) do

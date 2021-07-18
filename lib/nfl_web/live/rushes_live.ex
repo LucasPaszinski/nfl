@@ -79,6 +79,8 @@ defmodule NflWeb.RushesLive do
     {:noreply, socket}
   end
 
+  @spec load_from_query_to_socket(Phoenix.LiveView.Socket.t(), map()) ::
+          Phoenix.LiveView.Socket.t()
   defp load_from_query_to_socket(socket, query) do
     get_query_value = fn {key, _default_value} ->
       value = get_from_query_or_socket(query, Atom.to_string(key), socket, key)
@@ -89,12 +91,16 @@ defmodule NflWeb.RushesLive do
     assign(socket, Enum.map(@query_params_and_defaults, &get_query_value.(&1)))
   end
 
+  @spec load_from_socket_to_query(Phoenix.LiveView.Socket.t()) ::
+          Phoenix.LiveView.Socket.t()
   defp load_from_socket_to_query(socket) do
     query_params = create_query_params(socket, true)
 
     push_patch(socket, to: Routes.rushes_path(socket, :index, query_params))
   end
 
+  @spec get_from_query_or_socket(map(), String.t(), Phoenix.LiveView.Socket.t(), atom()) ::
+          String.t() | integer()
   defp get_from_query_or_socket(
          query,
          query_key,
@@ -107,6 +113,7 @@ defmodule NflWeb.RushesLive do
     query_value || assigns_value
   end
 
+  @spec create_query_params(Phoenix.LiveView.Socket.t(), boolean()) :: map()
   defp create_query_params(%{assigns: assigns} = _socket, hide_values_from_query? \\ false) do
     Enum.reduce(@query_params_and_defaults, %{}, fn {key, default_val}, acc ->
       value = Map.get(assigns, key) || default_val
@@ -121,17 +128,27 @@ defmodule NflWeb.RushesLive do
     end)
   end
 
+  @type filter_params() :: list({atom(), String.t()})
+
+  @spec create_filter_params(map()) :: filter_params()
   defp create_filter_params(%{player: ""}), do: []
   defp create_filter_params(%{player: player}), do: [player: player]
 
+  @type sort_params() :: list({String.t(), String.t()})
+
+  @spec create_sort_params(map()) :: sort_params()
   defp create_sort_params(%{sort: ""}), do: []
   defp create_sort_params(%{ord: ""}), do: []
   defp create_sort_params(%{ord: ord, sort: sort}), do: [{ord, sort}]
 
+  @type page_params() :: list({atom(), String.t() | integer()})
+
+  @spec create_page_params(map()) :: page_params()
   defp create_page_params(%{page: page, page_size: page_size}) do
     [page: page, page_size: page_size]
   end
 
+  @spec load_rushes(Phoenix.LiveView.Socket.t()) :: Phoenix.LiveView.Socket.t()
   defp load_rushes(socket) do
     query_params = create_query_params(socket)
 
@@ -139,10 +156,7 @@ defmodule NflWeb.RushesLive do
     sorts = create_sort_params(query_params)
     filters = create_filter_params(query_params)
 
-    {time, rushes_page} =
-      :timer.tc(fn -> Nfl.Rushes.Index.rushes_paginated(pages, sorts, filters) end)
-
-    IO.puts("Took #{time / 1000}ms")
+    rushes_page = Nfl.Rushes.Index.rushes_paginated(pages, sorts, filters)
 
     assign(socket,
       entries: rushes_page.entries,

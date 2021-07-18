@@ -53,11 +53,9 @@ defmodule Nfl.Rushes.Index do
   defp repo_or_cache(key, query_builder, repo) do
     case Cache.read(__MODULE__, key) do
       {:ok, value} ->
-        IO.puts "Cached result"
         value
 
       {:error, _} ->
-        IO.puts "Uncached result"
         value = query_builder.() |> repo.()
 
         Cache.write(__MODULE__, key, value)
