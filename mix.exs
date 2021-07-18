@@ -50,7 +50,9 @@ defmodule Nfl.MixProject do
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:csv, "~> 2.4"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:ex_machina, "~> 2.7.0", only: :test},
+      {:faker, "~> 0.16", only: :test}
     ]
   end
 

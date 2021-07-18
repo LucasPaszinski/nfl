@@ -24,6 +24,7 @@ defmodule Nfl.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Nfl.DataCase
+      import Nfl.Factory
     end
   end
 

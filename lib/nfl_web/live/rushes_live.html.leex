@@ -39,21 +39,21 @@
       </tr>
       <%= for rush <- @entries do %>
         <tr>
-          <th><%= rush.player.name %></td>
-          <td><%= rush.player.team.name %></td>
-          <td><%= rush.player.position %></td>
-          <td><%= rush.rushing_attemps_per_game_average %></td>
-          <td><%= rush.rushing_attemps %></td>
-          <td><%= rush.total_rushing_yards %></td>
-          <td><%= rush.rushing_average_yards_per_attempt %></td>
-          <td><%= rush.rushing_yards_per_game %></td>
-          <td><%= rush.total_rushing_touchdowns  %></td>
-          <td><%= rush.longest_rush %> <%= live_component TouchdownIcon, is_touchdown: rush.is_touchdown %></td>
-          <td><%= rush.rushing_first_downs %></td>
-          <td><%= rush.rushing_first_downs_per_cent %></td>
-          <td><%= rush.rushing_20_plus_yards_each %></td>
-          <td><%= rush.rushing_40_plus_yards_each %></td>
-          <td><%= rush.rushing_fumbles %></td>
+          <th id="player_name"><%= rush.player.name %></td>
+          <td id="team_name"><%= rush.player.team.name %></td>
+          <td id="player_position"><%= rush.player.position %></td>
+          <td id="rushing_attemps_per_game_average"><%= rush.rushing_attemps_per_game_average %></td>
+          <td id="rushing_attemps"><%= rush.rushing_attemps %></td>
+          <td id="total_rushing_yards"><%= rush.total_rushing_yards %></td>
+          <td id="rushing_average_yards_per_attempt"><%= rush.rushing_average_yards_per_attempt %></td>
+          <td id="rushing_yards_per_game"><%= rush.rushing_yards_per_game %></td>
+          <td id="total_rushing_touchdowns"><%= rush.total_rushing_touchdowns  %></td>
+          <td id="longest_rush"><%= live_component TouchdownIcon, longest_rush: rush.longest_rush, is_touchdown: rush.is_touchdown %></td>
+          <td id="rushing_first_downs"><%= rush.rushing_first_downs %></td>
+          <td id="rushing_first_downs_per_cent"><%= rush.rushing_first_downs_per_cent %></td>
+          <td id="rushing_20_plus_yards_each"><%= rush.rushing_20_plus_yards_each %></td>
+          <td id="rushing_40_plus_yards_each"><%= rush.rushing_40_plus_yards_each %></td>
+          <td id="rushing_fumbles"><%= rush.rushing_fumbles %></td>
         </tr>
       <% end %>
     </tbody>

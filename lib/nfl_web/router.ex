@@ -17,7 +17,7 @@ defmodule NflWeb.Router do
   scope "/", NflWeb do
     pipe_through :browser
 
-    live "/rush", RushesLive, :index
+    live "/", RushesLive, :index
     get "/download", DownloadCsvController, :download
   end
 

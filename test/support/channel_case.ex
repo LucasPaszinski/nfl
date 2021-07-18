@@ -22,6 +22,7 @@ defmodule NflWeb.ChannelCase do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
       import NflWeb.ChannelCase
+      import Nfl.Factory
 
       # The default endpoint for testing
       @endpoint NflWeb.Endpoint
