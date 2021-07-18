@@ -1,13 +1,13 @@
 defmodule Nfl.CSV do
   def generate_csv_content(rushes) do
-      rushes
-      |> parse_content()
-      |> CSV.encode()
-      |> Enum.join("")
+    rushes
+    |> parse_content()
+    |> CSV.encode()
+    |> Enum.join("")
   end
 
   @headers [
-    "Player Name",
+    "Player",
     "Team",
     "Position",
     "Rushing Attempts Per Game Average",
