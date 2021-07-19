@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 13.8.0
+          node-version: 14.15.4
 
       - uses: actions/cache@v1
         id: deps-cache
@@ -60,6 +60,8 @@ jobs:
           mix deps.get
           (cd assets && yarn)
 
+      - run: mix dialyzer
+      - run: mix credo
       - run: mix format --check-formatted
       - run: mix test
   
