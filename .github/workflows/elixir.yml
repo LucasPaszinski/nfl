@@ -22,7 +22,6 @@ jobs:
 
     steps:
       - run: openssl version
-      - run: sudo apt-get install open-ssl
       - run: sudo apt update
       - run: sudo apt upgrade
       - run: sudo apt install wget build-essential checkinstall zlib1g-dev
