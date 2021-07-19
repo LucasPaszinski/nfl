@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: sudo apt-get install libcrypto 
       - uses: actions/setup-elixir@v1
         with:
           otp-version: ${{ matrix.otp }}
