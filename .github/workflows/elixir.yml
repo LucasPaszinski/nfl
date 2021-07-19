@@ -22,22 +22,6 @@ jobs:
 
     steps:
       - run: openssl version
-      - run: sudo apt update
-      - run: sudo apt upgrade
-      - run: sudo apt install wget build-essential checkinstall zlib1g-dev
-      - run: sudo cp -R /usr/lib/ssl /usr/lib/ssl-1.1.1h
-      - run: wget https://www.openssl.org/source/openssl-1.1.1h.tar.gz
-      - run: wget https://www.openssl.org/source/openssl-1.1.1h.tar.gz.sha256
-      - run: tar -zxf openssl-1.1.1h.tar.gz
-      - run: cd openssl-1.1.1h
-      - run: ./config
-      - run: make
-      - run: make test
-      - run: sudo make install
-      - run: sudo mv /usr/bin/openssl /usr/bin/openssl-1.1.1f
-      - run: sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
-      - run: sudo ldconfig
-      - run: openssl version
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
         with:
