@@ -62,10 +62,13 @@ Version used for this project:
 
 you can also find then in .tool-version, and if you use asdf a `asdf install` should install then for you.
 
+You will need to have postgres installed.
+If connection fails, check the credentials on `./config/dev.exs`
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix setup`
+  * Create and migrate your database with `mix setup` or `mix ecto.create && mix ecto.migrate && mix run ./priv/repo/seeds.exs`
   * Install Node.js dependencies with `npm install` inside the `assets` directory
   * Start Phoenix endpoint with `mix phx.server`
 
