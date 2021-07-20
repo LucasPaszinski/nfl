@@ -1,4 +1,9 @@
 defmodule Nfl.CSV do
+  @moduledoc """
+  Create CSV content from a list of rushes
+  """
+
+  @spec generate_csv_content(list(Nfl.Schemas.Rush.t())) :: String.t()
   def generate_csv_content(rushes) do
     rushes
     |> parse_content()

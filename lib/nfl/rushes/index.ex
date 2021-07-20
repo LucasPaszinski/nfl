@@ -1,4 +1,7 @@
 defmodule Nfl.Rushes.Index do
+  @moduledoc """
+  Index (Get all) the records of rushes from database, also allow filters and sorts.
+  """
   import Ecto.Query
 
   alias Nfl.Repo

@@ -12,7 +12,6 @@ defmodule NflWeb.DownloadCsvController do
 
     conn
     |> send_download({:binary, content}, filename: "rushes_table.csv")
-    |> halt()
   end
 
   defp create_filters(%{"player" => player}), do: [player: player]

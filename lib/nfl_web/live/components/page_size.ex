@@ -1,4 +1,7 @@
 defmodule NflWeb.Live.Components.PageSize do
+  @moduledoc """
+  Page size (number of rows per page) configuration to the table
+  """
   use NflWeb, :live_component
 
   def pages_sizes do

@@ -1,4 +1,7 @@
 defmodule NflWeb.Live.Components.Pagination do
+  @moduledoc """
+  Pagination for table, create a pages bar, that allow to select the page that you want to see
+  """
   use NflWeb, :live_component
 
   def pages_sizes do

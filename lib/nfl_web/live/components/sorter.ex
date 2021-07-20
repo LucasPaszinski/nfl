@@ -1,4 +1,7 @@
 defmodule NflWeb.Live.Components.Sorter do
+  @moduledoc """
+  Sorting icon and events. Allow sorting (asc - desc - no-sort)
+  """
   use NflWeb, :live_component
 
   def render(assigns) do

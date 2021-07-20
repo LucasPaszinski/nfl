@@ -1,4 +1,7 @@
 defmodule NflWeb.RushesLive do
+  @moduledoc """
+  Table that show all player current rush statistics, can be filtered and sorted, and also downloaded
+  """
   use NflWeb, :live_view
 
   alias NflWeb.Live.Components.{TouchdownIcon, Sorter, Pagination, PageSize}

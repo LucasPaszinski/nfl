@@ -71,6 +71,8 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+Or if you want to check a production running version check [`https://nfl.gigalixirapp.com`](https://nfl.gigalixirapp.com)
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/

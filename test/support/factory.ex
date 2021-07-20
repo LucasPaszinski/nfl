@@ -1,4 +1,7 @@
 defmodule Nfl.Factory do
+  @moduledoc """
+  Exmachina Factory that allow easy mocking on the database.
+  """
   use ExMachina.Ecto, repo: Nfl.Repo
 
   alias Nfl.Schemas.{Rush, Player, Team}

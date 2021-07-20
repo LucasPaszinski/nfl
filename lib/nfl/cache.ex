@@ -1,4 +1,7 @@
 defmodule Nfl.Cache do
+  @moduledoc """
+  A generic Cache.
+  """
   use GenServer
 
   @is_test_env if Mix.env() == :test, do: true, else: false

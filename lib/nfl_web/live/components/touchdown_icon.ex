@@ -1,4 +1,7 @@
 defmodule NflWeb.Live.Components.TouchdownIcon do
+  @moduledoc """
+  Add info and pop up for touchdown.
+  """
   use NflWeb, :live_component
 
   @impl true
